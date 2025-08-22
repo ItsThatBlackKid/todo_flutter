@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_flutter/notifiers/auth_notifier.dart';
+import 'package:todo_flutter/app/notifiers/auth_notifier.dart';
 
 class SignpPage extends StatefulWidget {
   const SignpPage({super.key});
