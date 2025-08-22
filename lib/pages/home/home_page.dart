@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_flutter/models/todo_model.dart';
 import 'package:todo_flutter/notifiers/todo_notifier.dart';
 import 'package:todo_flutter/utils/todo_list.dart';
 
@@ -20,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    loadTodos();
   }
 
   void checkboxChanged(int index) {
@@ -50,9 +48,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void loadTodos() async {
-    final prefs = await SharedPreferences.getInstance();
-    final todoStrings = prefs.getStringList('todos') ?? [];
-    todoList.fromStringList(todoStrings);
+    setState(() {
+      todoList.loadTodos();
+    });
   }
 
   @override

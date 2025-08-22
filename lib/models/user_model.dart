@@ -1,27 +1,25 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
 
 class User {
-  User({required this.id, required this.name, required this.email});
+  User({required this.id, required this.username});
 
   final String id;
-  final String name;
-  final String email;
+  final String username;
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] as String,
-      name: json['name'] as String,
-      email: json['email'] as String,
+      username: json['name'] as String,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'email': email};
+    return {'id': id, 'name': username};
   }
 
   @override
   String toString() {
-    return '$id:$name:$email';
+    return '$id:$username';
   }
 
   static User fromString(String userString) {
@@ -29,17 +27,16 @@ class User {
     if (parts.length != 3) {
       throw FormatException('Invalid user format: $userString');
     }
-    return User(id: parts[0], name: parts[1], email: parts[2]);
+    return User(id: parts[0], username: parts[1]);
   }
 }
 
 class UserWithPassword extends User {
   UserWithPassword({
-    required String id,
-    required String name,
-    required String email,
+    required super.id,
+    required super.username,
     required this.password,
-  }) : super(id: id, name: name, email: email);
+  });
 
   final String password;
 
@@ -55,6 +52,15 @@ class UserWithPassword extends User {
     return '${super.toString()}:$password';
   }
 
+  factory UserWithPassword.fromJson(Map<String, dynamic> json) {
+    return UserWithPassword(
+      id: json['id'] as String,
+      username: json['username'] as String,
+      password: json['password'] as String,
+    );
+  }
+  
+
   static UserWithPassword fromString(String userString) {
     final parts = userString.split(':');
     if (parts.length != 4) {
@@ -62,9 +68,15 @@ class UserWithPassword extends User {
     }
     return UserWithPassword(
       id: parts[0],
-      name: parts[1],
-      email: parts[2],
+      username: parts[1],
       password: parts[3],
     );
   }
+
+
+  static List<UserWithPassword> fromJsonList(String jsonString) {
+    final List<dynamic> jsonList = json.decode(jsonString);
+    return jsonList.map((json) => UserWithPassword.fromJson(json)).toList();
+  }
+  
 }

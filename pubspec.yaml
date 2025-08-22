@@ -40,6 +40,10 @@ dependencies:
   json_serializable: ^6.10.0
   json_annotation: ^4.9.0
   go_router: ^16.2.0
+  uuid: ^4.5.1
+  crypt: ^4.3.1
+  flutter_secure_storage: ^9.2.4
+  get_it: ^8.2.0
 
 dev_dependencies:
   flutter_test:

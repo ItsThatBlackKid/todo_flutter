@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/main.dart';
 import 'package:todo_flutter/models/todo_model.dart';
+import 'package:todo_flutter/utils/storage_service.dart';
 
 class TodoModel extends ChangeNotifier {
+  final StorageService _storageService;
+  TodoModel({StorageService? storageService})
+    : _storageService = storageService ?? getIt<StorageService>() {
+    loadTodos();
+  }
+
   final List<Todo> _todos = [];
 
   int get length => _todos.length;
@@ -36,6 +44,15 @@ class TodoModel extends ChangeNotifier {
       return _todos[index];
     }
     throw RangeError.index(index, _todos, 'index', null, _todos.length);
+  }
+
+  void saveTodos() async {
+    await _storageService.set<List<String>>('todos', toStringList());
+  }
+
+  void loadTodos() {
+    final todoStrings = _storageService.get<List<String>>('todos') ?? [];
+    fromStringList(todoStrings);
   }
 
   List<String> toStringList() {
