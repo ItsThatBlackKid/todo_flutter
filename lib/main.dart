@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_flutter/models/todo_model.dart';
-import 'package:todo_flutter/pages/home_page.dart';
+import 'package:todo_flutter/pages/home/home_page.dart';
+import 'package:todo_flutter/pages/router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: true,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -34,10 +35,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: ChangeNotifierProvider(
-        create: (context) => TodoModel(),
-        child: HomePage(),
-      ),
+      routerConfig: router,
     );
   }
 }
