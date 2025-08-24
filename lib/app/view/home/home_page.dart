@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_flutter/app/notifiers/todo_notifier.dart';
-import 'package:todo_flutter/utils/todo_list.dart';
+import 'package:todo_flutter/app/view/home/todo_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

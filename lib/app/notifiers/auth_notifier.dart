@@ -1,17 +1,12 @@
-import 'dart:convert';
-
-import 'package:crypt/crypt.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_flutter/main.dart';
-import 'package:todo_flutter/features/auth/data/models/user_model.dart';
-import 'package:todo_flutter/utils/storage_service.dart';
-import 'package:uuid/uuid.dart';
+import 'package:todo_flutter/di/service_locator.dart';
+import 'package:todo_flutter/features/auth/controller/entities/user.dart';
+import 'package:todo_flutter/features/auth/controller/repositories/auth_repository.dart';
 
 class AuthNotifier extends ChangeNotifier {
-  final StorageService _storageService;
+  final AuthRepository _authRepository = serviceLocator<AuthRepository>();
 
-  AuthNotifier({StorageService? storageService})
-    : _storageService = storageService ?? getIt<StorageService>() {
+  AuthNotifier() {
     init();
   }
 
@@ -36,48 +31,23 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    final userString = await _storageService.readSecureData('current_user');
-    if (userString != null) {
-      _currentUser = User.fromJson(jsonDecode(userString));
-      _isAuthenticated = true;
-    }
-  }
+    if (await _authRepository.isAuthenticated()) {
+      var result = await _authRepository.getUserFromToken();
 
-  Future<void> _storeUserWithPassword(UserWithPassword user) async {
-    var userListString = await _storageService.readSecureData('user') ?? '';
-    var userList = userListString.isNotEmpty
-        ? UserWithPassword.fromJsonList(userListString)
-        : [];
-
-    userList.add(user);
-
-    await _storageService.saveSecure('user', jsonEncode(userList));
-  }
-
-  Future<void> _storeCurrentUser() async {
-    if (_currentUser != null) {
-      await _storageService.saveSecure(
-        'current_user',
-        jsonEncode(_currentUser!.toJson()),
+      result.fold(
+        ifLeft: (_) {
+          _isAuthenticated = false;
+        },
+        ifRight: (user) {
+          _currentUser = user;
+        },
       );
     }
+    notifyListeners();
   }
 
-  Future<void> signup(String username, String password) async {
-    // Simulate a signup process
-    UserWithPassword user = UserWithPassword(
-      id: Uuid().v4(),
-      username: username,
-      password: Crypt.sha256(password).hash,
-    );
-
-    await _storeUserWithPassword(user);
-
-    _currentUser = User(id: user.id, username: user.username);
-
-    _storeCurrentUser();
-
-    _isAuthenticated = true;
+  Future<void> _checkAuthStatus() async {
+    _isAuthenticated = await _authRepository.isAuthenticated();
     notifyListeners();
   }
 }

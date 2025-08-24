@@ -1,20 +1,20 @@
 import 'dart:convert';
-import 'package:sqflite/sqflite.dart';
+
 import 'package:todo_flutter/core/db/database_model.dart';
 
-class User implements DatabaseModel {
-  const User({required this.id, required this.username});
+class UserModel implements DatabaseModel {
+  UserModel({
+    required this.id,
+    required this.username,
+    required this.password
+  });
 
   final String id;
   final String username;
+  final String password;
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(id: json['id'] as String, username: json['username'] as String);
-  }
-
-  @override
-  Map<String, Object?> toJson() {
-    return {'id': id, 'username': username};
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(id: json['id'] as String, username: json['username'] as String, password: json['password']);
   }
 
   @override
@@ -22,46 +22,45 @@ class User implements DatabaseModel {
     return '$id:$username';
   }
 
-  static User fromString(String userString) {
+  static UserModel fromString(String userString) {
     final parts = userString.split(':');
     if (parts.length != 3) {
       throw FormatException('Invalid user format: $userString');
     }
-    return User(id: parts[0], username: parts[1]);
+    return UserModel(id: parts[0], username: parts[1], password: parts[2]);
   }
 
-  static List<User> fromJsonList(String jsonString) {
+  static List<UserModel> fromJsonList(String jsonString) {
     final List<dynamic> jsonList = json.decode(jsonString);
-    return jsonList.map((json) => User.fromJson(json)).toList();
+    return jsonList.map((json) => UserModel.fromJson(json)).toList();
+  }
+
+  List<UserModel> fromMapList(List<Map<String, Object?>> map) {
+    const List<UserModel> users = [];
+
+    for (var user in map) {
+      users.add(UserModel.fromMap(user));
+    }
+
+    return users;
   }
 
   @override
-  DatabaseModel fromJson(Map<String, Object?> json) {
-    // TODO: implement fromJson
-    return User(id: json['id'] as String, username: json['username'] as String);
-  }
-
-  @override
-  DatabaseModel fromMap(Map<String, Object?> map) {
-    // TODO: implement fromMap
-    return User(id: map['id'] as String, username: map['username'] as String);
-  }
-
-  @override
-  // TODO: implement props
   List<Object?> get props => [id, username];
 
   @override
-  // TODO: implement stringify
   bool? get stringify => true;
 
   @override
-  // TODO: implement tableName
   String get tableName => 'users';
 
   @override
   Map<String, Object?> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+    return {id: id, username: username};
   }
+
+  UserModel.fromMap(Map<String, Object?> map)
+    : id = map['id'] as String,
+      username = map['username'] as String,
+      password = map['password'] as String;
 }

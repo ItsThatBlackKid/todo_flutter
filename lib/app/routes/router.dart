@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_flutter/app/notifiers/auth_notifier.dart';
 import 'package:todo_flutter/app/notifiers/todo_notifier.dart';
-import 'package:todo_flutter/pages/home/home_page.dart';
+import 'package:todo_flutter/app/view/home/home_page.dart';
 import 'package:todo_flutter/features/auth/ui/screens/signup/signp_page.dart';
 
 class AppRouter {

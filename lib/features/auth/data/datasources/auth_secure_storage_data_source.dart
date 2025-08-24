@@ -1,10 +1,10 @@
-
-
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:todo_flutter/core/services/local_storage/abstract_secure_storage_service.dart';
+import 'package:todo_flutter/features/auth/controller/entities/user.dart';
 import 'package:todo_flutter/features/auth/data/datasources/abstract_auth_secure_storage_data_source.dart';
-import 'package:todo_flutter/features/auth/data/models/user_model.dart';
 
-class AuthSecureStorageDataSource implements AbstractAuthSecureStorageDataSource {
+class AuthSecureStorageDataSource
+    implements AbstractAuthSecureStorageDataSource {
   final AbstractSecureStorageService _secureStorageService;
 
   AuthSecureStorageDataSource(this._secureStorageService);
@@ -23,7 +23,7 @@ class AuthSecureStorageDataSource implements AbstractAuthSecureStorageDataSource
   Future<void> removeToken() {
     return _secureStorageService.remove('auth_token');
   }
-  
+
   @override
   Future<void> clear() {
     return _secureStorageService.clear();
@@ -31,16 +31,16 @@ class AuthSecureStorageDataSource implements AbstractAuthSecureStorageDataSource
 
 
   @override
-  Future<void> saveUser(User user) {
-    // TODO: implement saveUser
-    throw UnimplementedError();
-  }
-  
-  @override
-  Future<User?> getUser(String username) {
-    // TODO: implement getUser
-    throw UnimplementedError();
-  }
+  Future<String> createToken(final User user) async {
+    // TODO: implement createToken
+    final jwt = JWT({
+      'user': user.toMap(),
+      'issuer': 'com.saokan.todo_flutter',
+    });
 
-  
+    final token = jwt.sign(SecretKey('secret_tunnel'));
+    saveToken(token);
+
+    return token;
+  }
 }

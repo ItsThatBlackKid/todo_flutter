@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_flutter/app/notifiers/auth_notifier.dart';
+import 'package:todo_flutter/core/utils/view_state.dart';
+import 'package:todo_flutter/di/service_locator.dart';
+import 'package:todo_flutter/features/auth/ui/notifiers/signup_notifier.dart';
 
 class SignpPage extends StatefulWidget {
   const SignpPage({super.key});
@@ -10,6 +13,7 @@ class SignpPage extends StatefulWidget {
 }
 
 class _SignpPageState extends State<SignpPage> {
+  final SignupNotifier _signupNotifier = serviceLocator<SignupNotifier>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _usernameController = TextEditingController();
@@ -17,14 +21,21 @@ class _SignpPageState extends State<SignpPage> {
 
   bool _obscureText = true;
 
+  
+
   void signUp() {
     if (_formKey.currentState!.validate()) {
       // Perform sign up logic here
 
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Signing up...')));
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signing up...')),
+      _signupNotifier.signUp(
+        username: _usernameController.text,
+        password: _passwordController.text,
       );
+
       // Clear the form fields after sign up
       _usernameController.clear();
       _passwordController.clear();
@@ -33,13 +44,17 @@ class _SignpPageState extends State<SignpPage> {
 
   @override
   Widget build(BuildContext context) {
-    
+    var viewState = _signupNotifier.state;
 
     return Scaffold(
       appBar: AppBar(title: Text('Sign Up')),
       body: Form(
         key: _formKey,
-        child: FocusTraversalGroup(
+        child: _signupNotifier.state == ViewState.loading ? 
+        CircularProgressIndicator(
+          
+        )
+        :  FocusTraversalGroup(
           policy: OrderedTraversalPolicy(),
           child: Column(
             children: [
@@ -56,7 +71,7 @@ class _SignpPageState extends State<SignpPage> {
                   },
                 ),
               ),
-           Padding(
+              Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
                   decoration: InputDecoration(
@@ -74,7 +89,7 @@ class _SignpPageState extends State<SignpPage> {
                   ),
                   controller: _passwordController,
                   obscureText: _obscureText,
-          
+
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
@@ -89,18 +104,11 @@ class _SignpPageState extends State<SignpPage> {
               ElevatedButton(
                 onPressed: () {
                   // Handle sign up logic
-          
+
                   if (_formKey.currentState!.validate()) {
                     // Perform sign up
-                    
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text('Signing up...')));
 
-                    context.read<AuthNotifier>().signup(
-                      _usernameController.text,
-                      _passwordController.text,
-                    );
+                    signUp();
                   }
                 },
                 child: Text('Sign Up'),
