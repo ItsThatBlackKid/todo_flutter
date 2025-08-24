@@ -12,6 +12,8 @@ class TodoApp extends StatefulWidget {
 }
 
 class _TodoAppState extends State<TodoApp> {
+  final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
   final AuthNotifier _authNotifier = AuthNotifier();
   late final AppRouter appRouter;
 
@@ -19,6 +21,9 @@ class _TodoAppState extends State<TodoApp> {
   void initState() {
     super.initState();
     appRouter = AppRouter(_authNotifier);
+    appRouter.router.routerDelegate.addListener(() {
+      _scaffoldMessengerKey.currentState?.removeCurrentSnackBar();
+    });    
   }
 
   // This widget is the root of your application.

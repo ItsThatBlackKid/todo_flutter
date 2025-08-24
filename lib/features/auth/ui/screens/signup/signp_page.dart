@@ -19,6 +19,13 @@ class _SignpPageState extends State<SignpPage> {
 
   bool _obscureText = true;
 
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void signUp(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       // Perform sign up logic here
