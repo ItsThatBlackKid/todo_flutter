@@ -10,7 +10,6 @@ class SecureStorageService implements AbstractSecureStorageService {
 
   @override
   Future<void> clear() {
-    // TODO: implement clear
     return _secureStorage.deleteAll();
   }
 

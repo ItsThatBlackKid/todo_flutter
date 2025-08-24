@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/di/service_locator.dart';
 import 'package:todo_flutter/main.dart';
 import 'package:todo_flutter/models/todo_model.dart';
 import 'package:todo_flutter/utils/storage_service.dart';
 
 class TodoModel extends ChangeNotifier {
-  final StorageService _storageService;
-  TodoModel({StorageService? storageService})
-    : _storageService = storageService ?? getIt<StorageService>() {
+  final StorageService _storageService = serviceLocator<StorageService>();
+
+  TodoModel() {
     loadTodos();
   }
 

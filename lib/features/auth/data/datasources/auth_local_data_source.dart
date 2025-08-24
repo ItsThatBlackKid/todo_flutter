@@ -9,7 +9,7 @@ import 'package:todo_flutter/features/auth/data/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class AbstractAuthLocalDataSource {
-  Future<void> signUp(String username, String password);
+  Future<User> signUp(String username, String password);
   Future<User> signIn(String username, String password);
 }
 
@@ -19,14 +19,21 @@ class AuthLocalDataSource implements AbstractAuthLocalDataSource {
   AuthLocalDataSource({required this.databaseHelper});
 
   @override
-  Future<void> signUp(String username, String password) async {
+  Future<User> signUp(String username, String password) async {
     final db = await databaseHelper.database;
     try {
-      await db.insert('users', {
-        'id': Uuid().v4(),
-        'username': username,
-        'password': Crypt.sha256(password).hash,
-      }, conflictAlgorithm: ConflictAlgorithm.fail);
+      UserModel userModel = UserModel(
+        id: Uuid().v4(),
+        username: username,
+        password: Crypt.sha256(password).hash,
+      );
+      await db.insert(
+        'users',
+        userModel.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.fail,
+      );
+
+      return _userFromModel(userModel);
     } on DatabaseException catch (e) {
       print(e);
 
@@ -68,7 +75,7 @@ class AuthLocalDataSource implements AbstractAuthLocalDataSource {
       }
 
       return _userFromModel(user);
-    } on DatabaseException catch (e) {
+    } on DatabaseException  {
       throw UnexpectedFailure(message: "Unexpected error occurred. Try again.");
     }
   }

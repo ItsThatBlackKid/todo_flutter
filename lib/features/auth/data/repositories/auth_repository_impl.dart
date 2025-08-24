@@ -2,18 +2,17 @@ import 'package:dart_either/dart_either.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:todo_flutter/core/errors/errors.dart';
 import 'package:todo_flutter/core/errors/exceptions/exists_exception.dart';
-import 'package:todo_flutter/core/errors/failures/failure.dart';
 import 'package:todo_flutter/core/errors/failures/token_not_found_failure.dart';
 import 'package:todo_flutter/core/errors/failures/unexpected_failure.dart';
 import 'package:todo_flutter/features/auth/controller/entities/user.dart';
 import 'package:todo_flutter/features/auth/controller/repositories/auth_repository.dart';
 import 'package:todo_flutter/features/auth/controller/usecases/params/signup_params.dart';
+import 'package:todo_flutter/features/auth/data/datasources/abstract_auth_secure_storage_data_source.dart';
 import 'package:todo_flutter/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:todo_flutter/features/auth/data/datasources/auth_secure_storage_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthLocalDataSource localDataSource;
-  final AuthSecureStorageDataSource secureStorageDataSource;
+  final AbstractAuthLocalDataSource localDataSource;
+  final AbstractAuthSecureStorageDataSource secureStorageDataSource;
 
   AuthRepositoryImpl(this.localDataSource, this.secureStorageDataSource);
 
@@ -23,7 +22,8 @@ class AuthRepositoryImpl implements AuthRepository {
     // This is a placeholder for the actual implementation
 
     try {
-      await localDataSource.signUp(params.username, params.password);
+      var user = await localDataSource.signUp(params.username, params.password);
+      await secureStorageDataSource.createToken(user);
       return Right(null);
     } on ExistsException catch (e) {
       return Left(UnexpectedFailure(message: e.message));

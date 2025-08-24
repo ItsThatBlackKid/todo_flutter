@@ -11,19 +11,25 @@ class AppRouter {
   late final router = GoRouter(
     routes: [
       GoRoute(
+        name: 'home',
         path: '/',
         builder: (context, state) => ChangeNotifierProvider(
           create: (context) => TodoModel(),
           child: HomePage(),
         ),
       ),
-      GoRoute(path: '/signup', builder: (context, state) => SignpPage()),
+      GoRoute(name: 'signup',path: '/signup', builder: (context, state) => SignpPage()),
     ],
     refreshListenable: _authNotifier,
     redirect: (context, state) {
       final isAuthenticated = _authNotifier.isAuthenticated;
 
-      if (!isAuthenticated && state.matchedLocation != '/signup' || !isAuthenticated && state.matchedLocation != '/signin' ) {
+      print(
+        "redirect triggered, updated state: ${_authNotifier.state} isAuthenticated: ${_authNotifier.isAuthenticated}, location: ${state.matchedLocation}",
+      );
+
+      if (!isAuthenticated && state.matchedLocation != '/signup' &&
+          !isAuthenticated && state.matchedLocation != '/signin') {
         return '/signup';
       }
 

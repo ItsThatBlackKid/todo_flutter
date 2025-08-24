@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_flutter/di/service_locator.dart';
 
 class StorageService {
   StorageService._internal();
@@ -10,14 +11,9 @@ class StorageService {
     return _instance;
   }
 
-  late SharedPreferences _sharedPreferences;
-  late FlutterSecureStorage _secureStorage;
-  Future<void> init() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    _secureStorage = FlutterSecureStorage(
-      aOptions: AndroidOptions(encryptedSharedPreferences: true),
-    );
-  }
+  final SharedPreferences _sharedPreferences =
+      serviceLocator<SharedPreferences>();
+  final FlutterSecureStorage _secureStorage = serviceLocator<FlutterSecureStorage>();
 
   // Shared Preferences methods
   T? get<T>(String key) {

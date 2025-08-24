@@ -3,18 +3,18 @@ import 'dart:convert';
 import 'package:todo_flutter/core/db/database_model.dart';
 
 class UserModel implements DatabaseModel {
-  UserModel({
-    required this.id,
-    required this.username,
-    required this.password
-  });
+  UserModel({required this.id, required this.username, required this.password});
 
   final String id;
   final String username;
   final String password;
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(id: json['id'] as String, username: json['username'] as String, password: json['password']);
+    return UserModel(
+      id: json['id'] as String,
+      username: json['username'] as String,
+      password: json['password'],
+    );
   }
 
   @override
@@ -56,9 +56,9 @@ class UserModel implements DatabaseModel {
 
   @override
   Map<String, Object?> toMap() {
-    return {id: id, username: username};
+    return {'id': id, 'username': username, 'password': password};
   }
-
+  
   UserModel.fromMap(Map<String, Object?> map)
     : id = map['id'] as String,
       username = map['username'] as String,
