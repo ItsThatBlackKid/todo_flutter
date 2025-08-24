@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_flutter/app/notifiers/auth_notifier.dart';
 import 'package:todo_flutter/app/notifiers/todo_notifier.dart';
 import 'package:todo_flutter/pages/home/home_page.dart';
-import 'package:todo_flutter/pages/signup/signp_page.dart';
+import 'package:todo_flutter/features/auth/ui/screens/signup/signp_page.dart';
 
 class AppRouter {
   final AuthNotifier _authNotifier;
@@ -23,10 +23,8 @@ class AppRouter {
     redirect: (context, state) {
       final isAuthenticated = _authNotifier.isAuthenticated;
 
-      if (!isAuthenticated && state.matchedLocation != '/signup') {
+      if (!isAuthenticated && state.matchedLocation != '/signup' || !isAuthenticated && state.matchedLocation != '/signin' ) {
         return '/signup';
-      } else if (isAuthenticated && state.matchedLocation == '/signup') {
-        return '/';
       }
 
       return null; // No redirect

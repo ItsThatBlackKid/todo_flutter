@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:crypt/crypt.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/main.dart';
-import 'package:todo_flutter/features/auth/models/user_model.dart';
+import 'package:todo_flutter/features/auth/data/models/user_model.dart';
 import 'package:todo_flutter/utils/storage_service.dart';
 import 'package:uuid/uuid.dart';
 
