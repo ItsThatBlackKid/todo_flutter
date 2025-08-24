@@ -15,7 +15,8 @@ class StorageService {
   Future<void> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _secureStorage = FlutterSecureStorage(
-      aOptions: AndroidOptions(encryptedSharedPreferences: true),
+      aOptions: AndroidOptions(encryptedSharedPreferences: true,),
+      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock)
     );
   }
 
