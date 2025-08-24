@@ -18,18 +18,20 @@ class AppRouter {
           child: HomePage(),
         ),
       ),
-      GoRoute(name: 'signup',path: '/signup', builder: (context, state) => SignpPage()),
+      GoRoute(
+        name: 'signup',
+        path: '/signup',
+        builder: (context, state) => SignpPage(),
+      ),
     ],
     refreshListenable: _authNotifier,
     redirect: (context, state) {
       final isAuthenticated = _authNotifier.isAuthenticated;
 
-      print(
-        "redirect triggered, updated state: ${_authNotifier.state} isAuthenticated: ${_authNotifier.isAuthenticated}, location: ${state.matchedLocation}",
-      );
-
-      if (!isAuthenticated && state.matchedLocation != '/signup' &&
-          !isAuthenticated && state.matchedLocation != '/signin') {
+      if (!isAuthenticated &&
+          state.matchedLocation != '/signup' &&
+          !isAuthenticated &&
+          state.matchedLocation != '/signin') {
         return '/signup';
       }
 

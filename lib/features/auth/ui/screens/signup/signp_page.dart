@@ -72,6 +72,9 @@ class _SignpPageState extends State<SignpPage> {
             : FocusTraversalGroup(
                 policy: OrderedTraversalPolicy(),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 16,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
